@@ -49,10 +49,6 @@ jobs:
         run: |
           go run convert-lists.go
 
-      - name: List files
-        run: |
-          ls -la
-
       - name: Convert iplist files to SRS
         id: convert-iplist
         run: |
@@ -68,6 +64,15 @@ jobs:
           files: ./*.srs
           body: |
             Automatically updated on: ${{env.DATE}}
+            Adguard rules parsed: ${{steps.convert-adguard.outputs.ratio}}
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+      - name: Delete Older Releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release list --limit 100 --json tagName -q '.[].tagName' | \
+          sort -rV | \
+          tail -n +3 | \
+          xargs -I {} gh release delete "{}" -y --cleanup-tag || true
