@@ -40,11 +40,14 @@ jobs:
           curl -fsSL -o iplist-beta.json "https://beta.iplist.opencck.org/?format=json&data=domains"
           curl -fsSL -o iplist-russian.json "https://russia.iplist.opencck.org/?format=json&data=domains"
 
-      - name: Convert iplist raw files to sing-box source format
+      - name: Set up golang
         uses: actions/setup-go@v6
         with:
           go-version: '1.25'
-          run: go run convert-lists.go
+
+      - name: Convert iplist raw files to sing-box source format
+        run: |
+          go run convert-lists.go
 
       - name: List files
         run: |
