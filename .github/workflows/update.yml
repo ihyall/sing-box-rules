@@ -46,6 +46,10 @@ jobs:
           go-version: '1.25'
           run: go run convert-lists.go
 
+      - name: List files
+        run: |
+          ls -la
+
       - name: Convert iplist files to SRS
         id: convert-iplist
         run: |
