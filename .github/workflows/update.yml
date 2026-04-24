@@ -1,0 +1,66 @@
+name: Update route rule lists
+on:
+  workflow_dispatch:
+  schedule:
+  - cron: '0 0 * * *'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Get Date
+        run: echo "DATE=$(date +%Y.%m.%d)" >> $GITHUB_ENV
+
+      - name: Install sing-box
+        run: |
+          curl -fsSL https://sing-box.app/install.sh | sh
+
+      - name: Download AdGuard filter
+        run: |
+          curl -fsSL -o adguard-filter.txt https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
+
+      - name: Convert to SRS
+        id: convert-adguard
+        run: |
+          output=$(sing-box rule-set convert --type adguard --output adguard-filter-list.srs adguard-filter.txt 2>&1)
+          echo "$output"
+          ratio=$(echo "$output" | grep -oE '[0-9]+/[0-9]+')
+          echo "ratio=$ratio" >> "$GITHUB_OUTPUT"
+
+      - name: Download iplist
+        run: |
+          curl -fsSL -o iplist-main.json https://iplist.opencck.org/?format=json&data=domains
+          curl -fsSL -o iplist-beta.json https://beta.iplist.opencck.org/?format=json&data=domains
+          curl -fsSL -o iplist-russian.json https://russia.iplist.opencck.org/?format=json&data=domains
+
+      - name: Convert iplist raw files to sing-box source format
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+          run: go run convert-lists.go
+
+      - name: Convert iplist files to SRS
+        id: convert-iplist
+        run: |
+          sing-box rule-set compile --output iplist-main.srs source-iplist-main.json
+          sing-box rule-set compile --output iplist-beta.srs source-iplist-beta.json
+          sing-box rule-set compile --output iplist-russian.srs source-iplist-russian.json
+
+      - name: Create release    
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{env.DATE}}
+          name: ${{env.DATE}}
+          files: *.srs
+          body: |
+            Automatically updated on: ${{env.DATE}}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
