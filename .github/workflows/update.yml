@@ -58,7 +58,7 @@ jobs:
         with:
           tag_name: v${{env.DATE}}
           name: ${{env.DATE}}
-          files: *.srs
+          files: ./*.srs
           body: |
             Automatically updated on: ${{env.DATE}}
         env:
