@@ -12,7 +12,7 @@ type SingBoxSourceFile struct {
 }
 
 type DomainRule struct {
-	Domains []string `json:"domain"`
+	Domains []string `json:"domain_suffix"`
 }
 
 func main() {
