@@ -15,6 +15,8 @@ type DomainRule struct {
 	Domains []string `json:"domain_suffix"`
 }
 
+const RuleSetVersion = 3 // Changes only available rule fields, > 2 because it added optimization to suffixes
+
 func main() {
 	var fileNames = []string{
 		"iplist-main.json",
@@ -35,7 +37,7 @@ func main() {
 		}
 
 		var RuleSetOut SingBoxSourceFile
-		RuleSetOut.Version = 4
+		RuleSetOut.Version = RuleSetVersion
 		RuleSetOut.Rules = make([]DomainRule, 0)
 		var fileRules DomainRule
 		fileRules.Domains = make([]string, 0)
