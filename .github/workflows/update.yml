@@ -34,6 +34,19 @@ jobs:
           ratio=$(echo "$output" | grep -oE '[0-9]+/[0-9]+')
           echo "ratio=$ratio" >> "$GITHUB_OUTPUT"
 
+      - name: Download hagezi filters
+        run: |
+          curl -fsSL -o hagezi-multi-normal.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/multi.txt
+          curl -fsSL -o hagezi-multi-pro.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt
+          curl -fsSL -o hagezi-popupads.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/popupads.txt
+
+      - name: Convert to SRS
+        id: convert-hagezi
+        run: |
+          sing-box rule-set convert hagezi-multi-normal.txt --type adguard
+          sing-box rule-set convert hagezi-multi-pro.txt --type adguard
+          sing-box rule-set convert hagezi-popupads.txt --type adguard
+
       - name: Download iplist
         run: |
           curl -fsSL -o iplist-main.json "https://iplist.opencck.org/?format=json&data=domains"
