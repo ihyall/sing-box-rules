@@ -36,9 +36,12 @@ jobs:
 
       - name: Download hagezi filters
         run: |
-          curl -fsSL -o hagezi-multi-normal.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/multi.txt
-          curl -fsSL -o hagezi-multi-pro.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt
-          curl -fsSL -o hagezi-popupads.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/popupads.txt
+          # curl -fsSL -o hagezi-multi-normal.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/multi.txt
+          # curl -fsSL -o hagezi-multi-pro.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/pro.txt
+          # curl -fsSL -o hagezi-popupads.txt https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/popupads.txt
+          curl -fsSL -o hagezi-multi-normal.txt https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/adblock/multi.txt
+          curl -fsSL -o hagezi-multi-pro.txt https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/adblock/pro.txt
+          curl -fsSL -o hagezi-popupads.txt https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/adblock/popupads.txt
 
       - name: Convert to SRS
         id: convert-hagezi
