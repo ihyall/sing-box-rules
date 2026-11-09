@@ -52,9 +52,9 @@ jobs:
 
       - name: Download iplist
         run: |
-          curl -fsSL --compressed -o iplist-main.json "https://iplist.opencck.org/?format=json&data=domains"
-          curl -fsSL --compressed -o iplist-beta.json "https://beta.iplist.opencck.org/?format=json&data=domains"
-          curl -fsSL --compressed -o iplist-russian.json "https://russia.iplist.opencck.org/?format=json&data=domains"
+          curl -fsSL -o iplist-main.json "https://iplist.opencck.org/?format=json&data=domains&wildcard=1"
+          curl -fsSL -o iplist-beta.json "https://beta.iplist.opencck.org/?format=json&data=domains&wildcard=1"
+          curl -fsSL -o iplist-russian.json "https://russia.iplist.opencck.org/?format=json&data=domains&wildcard=1"
 
       - name: Set up golang
         uses: actions/setup-go@v6
